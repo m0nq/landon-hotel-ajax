@@ -21,7 +21,36 @@
    * - Handle XHR response
    */
   const responseMethod = () => {
-    if (httpRequest.readyState === 4) console.log('Response text ->', httpRequest.responseText);
+    if (httpRequest.readyState === 4) {
+      httpRequest.status === 200 ?
+        updateUISuccess(httpRequest.responseText) :
+        updateUIError(httpRequest.responseText);
+      console.log('Response text ->', httpRequest.responseText);
+    }
+  };
+
+  /**
+   * updateUISuccess
+   * - Handle XHR Success
+   */
+  const updateUISuccess = responseText => {
+    let response = JSON.parse(responseText);
+    let condition = response.weather[0].main;
+    let degC = response.main.temp - 273.15;
+    let degCInt = Math.floor(degC);
+    let degF = degC * 1.8 + 32;
+    let degFInt = Math.floor(degF);
+    let weatherBox = document.querySelector('#weather');
+    weatherBox.innerHTML = `<p>${degCInt}&#176; C / ${degFInt}&#176; F</p><p>${condition}</p>`;
+  };
+
+  /**
+   * updateUIError
+   * - Handle XHR Error
+   */
+  const updateUIError = () => {
+    let weatherBox = document.querySelector('#weather');
+    weatherBox.className = 'hidden';
   };
 
   makeRequest();
