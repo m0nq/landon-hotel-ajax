@@ -1,36 +1,43 @@
 'use strict';
 
 // jQuery request
-// (() => {
-//   const url = 'http://api.openweathermap.org/data/2.5/weather?q=London,England';
-//   const apiKey = 'eac9eebd5253a65b267d683dfc52b619'; // Replace "APIKEY" with your own API key; otherwise, your HTTP request will not work
-//
-//   const updateUISuccess = response => {
-//     let condition = response.weather[0].main;
-//     let degC = response.main.temp - 273.15;
-//     let degCInt = Math.floor(degC);
-//     let degF = degC * 1.8 + 32;
-//     let degFInt = Math.floor(degF);
-//     // let weatherBox = document.querySelector('#weather');
-//     // weatherBox.innerHTML = `<p>${degCInt}&#176; C / ${degFInt}&#176; F</p><p>${condition}</p>`;
-//     let $weatherBox = $('#weather');
-//     $weatherBox.append(`<p>${degCInt}&#176; C / ${degFInt}&#176; F</p><p>${condition}</p>`);
-//   };
-//
-//   const updateUIError = () => {
-//     // let weatherBox = document.querySelector('#weather');
-//     // weatherBox.className = 'hidden';
-//     let $weatherBox = $('#weather');
-//     $weatherBox.addClass('hidden');
-//   };
-//
-//   $.get(`${url}&appid=${apiKey}`)
-//     .done(response => updateUISuccess(response))
-//     .fail(error => updateUIError(error));
-//
-//   console.log(this);
-//
-// })();
+(() => {
+  const url = 'http://api.openweathermap.org/data/2.5/weather?q=London,England';
+  const apiKey = 'eac9eebd5253a65b267d683dfc52b619'; // Replace "APIKEY" with your own API key; otherwise, your HTTP request will not work
+
+  const updateUISuccess = response => {
+    const Forecast = props => (
+      <div>
+        <p>{props.degCInt}&#176; C / {props.degFInt}&#176; F</p>
+        <p>{props.condition}</p>
+      </div>
+    );
+
+    let degC = response.main.temp - 273.15;
+    let degF = degC * 1.8 + 32;
+    let state = {
+      condition: response.weather[0].main,
+      degCInt: Math.floor(degC),
+      degFInt: Math.floor(degF)
+    };
+    let into = document.querySelector('#weather');
+    ReactDOM.render(<Forecast {...state} />, into);
+  };
+
+  const updateUIError = () => {
+    // let weatherBox = document.querySelector('#weather');
+    // weatherBox.className = 'hidden';
+    let $weatherBox = $('#weather');
+    $weatherBox.addClass('hidden');
+  };
+
+  $.get(`${url}&appid=${apiKey}`)
+    .done(response => updateUISuccess(response))
+    .fail(error => updateUIError(error));
+
+  console.log(this);
+
+})();
 
 // Fetch request
 // (() => {
